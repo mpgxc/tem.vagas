@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id            String       @id @default(uuid())
+  name          String
+  full_name     String
+  email         String       @unique
+  password      String
+  role          Role
+  document      String       @unique
+  document_type DocumentType
+  phone_number  String       @unique
+  bio           String?
+  company_info  Json?
+  preferences   Json?
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+
+  Advertisement        Advertisement[] @relation("CustomerAdvertisements")
+  NotificationSent     Notification[]  @relation("Sender")
+  NotificationReceived Notification[]  @relation("Receiver")
+
+  @@map("customers")
+}
+
+model Advertisement {
+  id           String             @id @default(uuid())
+  title        String
+  description  String
+  location     String // Exemplo: Rua, Bairro, Cidade, Estado
+  price        Decimal
+  bedrooms     Int
+  bathrooms    Int
+  garage       Int
+  area         Float
+  slug         String
+  is_furnished Boolean // Mobiliado?
+  image_urls   String[]
+  status       AnnouncementStatus
+  created_at   DateTime           @default(now())
+  updated_at   DateTime           @updatedAt
+
+  customer_id  String
+  Customer     Customer       @relation("CustomerAdvertisements", fields: [customer_id], references: [id])
+  Notification Notification[]
+  Address      Address?
+
+  @@map("advertisements")
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  street     String
+  number     String
+  city       String
+  state      String
+  zip_code   String
+  latitude   Float    @db.DoublePrecision
+  longitude  Float    @db.DoublePrecision
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  announcement_id String        @unique
+  Advertisement   Advertisement @relation(fields: [announcement_id], references: [id])
+
+  @@map("addresses")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  content   String
+  timestamp DateTime @default(now())
+
+  sender_id   String
+  receiver_id String
+  property_id String?
+
+  Sender        Customer       @relation("Sender", fields: [sender_id], references: [id])
+  Receiver      Customer       @relation("Receiver", fields: [receiver_id], references: [id])
+  Advertisement Advertisement? @relation(fields: [property_id], references: [id])
+
+  @@map("notifications")
+}
+
+model Leads {
+  id      String @id @default(uuid())
+  email   String @unique
+  name    String
+  phone   String @unique
+  message String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("leads")
+}
+
+enum Role {
+  Corretor
+  Proprietario
+  Imobiliaria
+  Inquilino
+  Administrador
+}
+
+enum AnnouncementStatus {
+  Disponivel
+  Alugado
+  Pausado
+  Vendido
+  Expirado
+}
+
+enum DocumentType {
+  CPF
+  CNPJ
+}

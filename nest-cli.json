@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "entryFile": "infra/main",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true
+  },
+  "projects": {
+    "logx": {
+      "type": "library",
+      "root": "libs/logx",
+      "entryFile": "index",
+      "sourceRoot": "libs/logx/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logx/tsconfig.lib.json"
+      }
+    }
+  }
+}
