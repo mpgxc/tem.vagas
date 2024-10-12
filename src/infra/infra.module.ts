@@ -8,6 +8,7 @@ import { AuthenticateUseCase } from 'usecases/authenticate';
 import { RegisterCustomerProfileUseCase } from 'usecases/register-customer';
 import { AccessTokenAuthGuard } from './auth/access-token-auth.guard';
 import { AccessTokenStrategy } from './auth/access-token.strategy';
+import { RefreshTokenStrategy } from './auth/refresh-token.strategy';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { CustomerProfileController } from './controllers/customer-profile.controller';
 import { RegisterCustomerProfileController } from './controllers/register-customer.controller';
@@ -41,7 +42,7 @@ import { TokensProvider } from './providers/tokens.provider';
   ],
   providers: [
     AccessTokenStrategy,
-    // RefreshTokenStrategy,
+    RefreshTokenStrategy,
     /**
      * Providers
      */
