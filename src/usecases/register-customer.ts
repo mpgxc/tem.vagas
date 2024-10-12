@@ -25,13 +25,17 @@ export class RegisterCustomerProfileUseCase {
     payload: RegisterCustomerInput,
   ): Promise<RegisterCustomerOutput> {
     try {
-      const exists = await this.repository.findByEmail(payload.email);
+      const exists = await this.repository.findUnique({
+        email: payload.email,
+        document: payload.document,
+        phone_number: payload.phone_number,
+      });
 
       if (exists) {
         return Result.Err(
           new ConflictException({
             name: 'CustomerAlreadyExists',
-            message: 'A customer with this email already exists',
+            message: `A customer with this <${exists.keys}> already exists`,
           }),
         );
       }
