@@ -1,15 +1,16 @@
-import { type CustomerRoles, Document } from '@/domain/customer';
+import { type CustomerRoles } from '@/domain/customer';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,
+  IsNotEmpty,
   IsPhoneNumber,
   IsString,
   IsStrongPassword,
   MaxLength,
   MinLength,
-  Validate,
 } from 'class-validator';
+import { IsDocumentType } from './decorators';
 
 const CutomerRolesEnum = [
   'Administrador',
@@ -22,19 +23,20 @@ const CutomerRolesEnum = [
 export class RegisterCustomerPayload {
   @ApiProperty({
     required: true,
+    example: 'A short description about the customer',
   })
   @IsString()
   @MinLength(8)
   @MaxLength(300)
+  @IsNotEmpty()
   bio!: string;
 
   @ApiProperty({
     required: true,
   })
   @IsString()
-  @Validate((value: string) => {
-    return Document.safeParse(value).success;
-  })
+  @IsDocumentType()
+  @IsNotEmpty()
   document!: string;
 
   @ApiProperty({
@@ -42,28 +44,34 @@ export class RegisterCustomerPayload {
     required: true,
   })
   @IsEnum(['CPF', 'CNPJ'])
+  @IsNotEmpty()
   document_type!: 'CPF' | 'CNPJ';
 
   @ApiProperty({
     required: true,
+    example: 'mpgxc@email.com',
   })
   @IsEmail()
+  @IsNotEmpty()
   email!: string;
 
   @ApiProperty({
     required: true,
   })
   @IsString()
+  @IsNotEmpty()
   full_name!: string;
 
   @ApiProperty({
     required: true,
   })
   @IsString()
+  @IsNotEmpty()
   name!: string;
 
   @ApiProperty({
     required: true,
+    example: 'P@ssw0rdX55',
   })
   @IsStrongPassword({
     minLength: 6,
@@ -72,6 +80,7 @@ export class RegisterCustomerPayload {
     minUppercase: 1,
     minSymbols: 1,
   })
+  @IsNotEmpty()
   password!: string;
 
   @ApiProperty({
@@ -82,6 +91,7 @@ export class RegisterCustomerPayload {
     each: true,
     message: 'phone_number must be a valid phone number',
   })
+  @IsNotEmpty()
   phone_number!: string;
 
   @ApiProperty({
