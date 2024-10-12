@@ -10,7 +10,7 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentCustomer as CurrentCustomerPayload } from 'infra/auth/access-token.strategy';
 import { CurrentCustomer } from 'infra/auth/current-customer.decorator';
 
-@ApiBearerAuth('JWT')
+@ApiBearerAuth()
 @ApiTags('Customers')
 @Controller('customers')
 export class CustomerProfileController {
@@ -22,7 +22,6 @@ export class CustomerProfileController {
   @Get('profile')
   @ApiOkResponse({
     description: 'The profile of the current customer.',
-    // type: @todo
   })
   @HttpCode(HttpStatus.OK)
   async profile(@CurrentCustomer() user: CurrentCustomerPayload): Promise<any> {
