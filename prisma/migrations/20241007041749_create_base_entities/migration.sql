@@ -13,6 +13,7 @@ CREATE TABLE "customers" (
     "name" TEXT NOT NULL,
     "full_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "avatar" TEXT,
     "password" TEXT NOT NULL,
     "role" "Role" NOT NULL,
     "document" TEXT NOT NULL,

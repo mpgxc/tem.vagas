@@ -23,12 +23,9 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/logx": [
-        "../libs/logx/src"
-      ],
-      "@app/logx/*": [
-        "../libs/logx/src/*"
-      ]
+      "@app/logx": ["../libs/logx/src"],
+      "@app/logx/*": ["../libs/logx/src/*"],
+      "@/*": ["*"]
     }
   }
 }

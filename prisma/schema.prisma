@@ -12,6 +12,7 @@ model Customer {
   name          String
   full_name     String
   email         String       @unique
+  avatar        String?
   password      String
   role          Role
   document      String       @unique
