@@ -5,6 +5,7 @@ import { HasherProvider } from '@/infra/providers/hasher';
 import { LoggerInject, LoggerService } from '@app/logx';
 import {
   ConflictException,
+  ForbiddenException,
   HttpException,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -25,6 +26,15 @@ export class RegisterCustomerProfileUseCase {
     payload: RegisterCustomerInput,
   ): Promise<RegisterCustomerOutput> {
     try {
+      if (payload.role === 'Administrador') {
+        return Result.Err(
+          new ForbiddenException({
+            name: 'InvalidCustomerRole',
+            message: `Invalid customer role: ${payload.role} - Administrador is not allowe to be created using this endpoint`,
+          }),
+        );
+      }
+
       const exists = await this.repository.findUnique({
         email: payload.email,
         document: payload.document,
