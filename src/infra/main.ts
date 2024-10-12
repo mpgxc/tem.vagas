@@ -1,4 +1,3 @@
-import * as cookieParser from 'cookie-parser';
 import { LoggerService } from '@app/logx';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -8,6 +7,7 @@ import {
   NestExpressApplication,
 } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import { InfraModule } from './infra.module';
 
 (async () => {

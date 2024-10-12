@@ -1,5 +1,6 @@
+import { LogxModule } from '@app/logx';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -10,14 +11,11 @@ import { AccessTokenStrategy } from './auth/access-token.strategy';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { CustomerProfileController } from './controllers/customer-profile.controller';
 import { RegisterCustomerProfileController } from './controllers/register-customer.controller';
-import { DynamoRepositoryService } from './database/dynamo/dynamo-repository.service';
-import { DynamoDBClientService } from './database/dynamo/dynamo.service';
+import { PrismaService } from './database/prisma.service';
 import { CustomersRepository } from './database/repositories/customers-repository';
 import { configuration } from './environment';
 import { HasherProvider } from './providers/hasher';
 import { TokensProvider } from './providers/tokens.provider';
-import { PrismaService } from './database/prisma.service';
-import { LogxModule } from '@app/logx';
 
 @Module({
   imports: [
@@ -62,19 +60,6 @@ import { LogxModule } from '@app/logx';
      * Repositories
      */
     CustomersRepository,
-    /**
-     * DynamoDB Services
-     */
-    DynamoDBClientService,
-    {
-      provide: DynamoRepositoryService,
-      useFactory: (client: DynamoDBClientService, config: ConfigService) =>
-        new DynamoRepositoryService(
-          client,
-          config.getOrThrow('AWS.AWS_DYNAMODB_TABLE'),
-        ),
-      inject: [DynamoDBClientService, ConfigService],
-    },
     PrismaService,
   ],
 })

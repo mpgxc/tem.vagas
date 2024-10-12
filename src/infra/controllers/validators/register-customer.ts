@@ -1,44 +1,93 @@
+import { type CustomerRoles, Document } from '@/domain/customer';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
-  IsMobilePhone,
+  IsEnum,
+  IsPhoneNumber,
   IsString,
   IsStrongPassword,
+  MaxLength,
+  MinLength,
+  Validate,
 } from 'class-validator';
+
+const CutomerRolesEnum = [
+  'Administrador',
+  'Corretor',
+  'Imobiliaria',
+  'Inquilino',
+  'Proprietario',
+] as CustomerRoles[];
 
 export class RegisterCustomerPayload {
   @ApiProperty({
-    example: 'Jhon Doe',
+    required: true,
+  })
+  @IsString()
+  @MinLength(8)
+  @MaxLength(300)
+  bio!: string;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsString()
+  @Validate((value: string) => {
+    return Document.safeParse(value).success;
+  })
+  document!: string;
+
+  @ApiProperty({
+    enum: ['CPF', 'CNPJ'],
+    required: true,
+  })
+  @IsEnum(['CPF', 'CNPJ'])
+  document_type!: 'CPF' | 'CNPJ';
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsEmail()
+  email!: string;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsString()
+  full_name!: string;
+
+  @ApiProperty({
+    required: true,
   })
   @IsString()
   name!: string;
 
   @ApiProperty({
-    example: '+5511999999999',
+    required: true,
   })
-  @IsMobilePhone('pt-BR')
-  phone!: string;
+  @IsStrongPassword({
+    minLength: 6,
+    minLowercase: 1,
+    minNumbers: 1,
+    minUppercase: 1,
+    minSymbols: 1,
+  })
+  password!: string;
 
   @ApiProperty({
-    example: 'jhon@doe.com',
+    example: '5511999999999',
+    required: true,
   })
-  @IsEmail()
-  email!: string;
+  @IsPhoneNumber('BR', {
+    each: true,
+    message: 'phone_number must be a valid phone number',
+  })
+  phone_number!: string;
 
-  @ApiProperty()
-  @IsString()
-  @IsStrongPassword(
-    {
-      minLength: 8,
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 1,
-    },
-    {
-      message:
-        'Password is too weak, it must have at least 8 characters, 1 lowercase, 1 uppercase, 1 number and 1 symbol',
-    },
-  )
-  password!: string;
+  @ApiProperty({
+    enum: CutomerRolesEnum,
+    required: true,
+  })
+  @IsEnum(CutomerRolesEnum, { each: true })
+  role!: CustomerRoles;
 }

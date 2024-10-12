@@ -1,40 +1,4 @@
 /**
- * Entity is a type of object that is not defined by its attributes, but rather by a thread of continuity and its identity.
- */
-
-export type Entity<Content = unknown> = {
-  PK: string;
-  SK: string;
-  Content: Content;
-  Updated: string;
-  Created: string;
-  Status: 'Ativo' | 'Inativo'; //'Excluído';
-};
-
-export const entityFactory = <T extends Entity>({
-  PK,
-  SK,
-  Content,
-  ...extra
-}: Replace<
-  T,
-  {
-    Created?: string;
-    Updated?: string;
-    Status?: 'Ativo' | 'Inativo';
-  }
->) =>
-  ({
-    PK,
-    SK,
-    Content,
-    Created: extra.Created || new Date().toISOString(),
-    Updated: extra.Updated || new Date().toISOString(),
-    Status: 'Ativo',
-    ...extra,
-  }) as T;
-
-/**
  * Optional is a type that represents an optional value.
  */
 export type Optional<T> = T | null | undefined;
@@ -44,6 +8,10 @@ export type OptionalPromise<T> = Promise<Optional<T>>;
  * Omit is a type that represents an object without a given set of properties.
  */
 export type Replace<T, R> = Omit<T, keyof R> & R;
+
+export type ExcludeKeys<T, K extends keyof T> = {
+  [P in Exclude<keyof T, K>]: T[P];
+};
 
 /**
  * Result Monad Implementation

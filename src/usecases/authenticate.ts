@@ -36,7 +36,7 @@ export class AuthenticateUseCase {
 
       const passwordMatch = await this.hasher.isMatch(
         password,
-        profile.Content.password,
+        profile.password,
       );
 
       if (!passwordMatch) {
@@ -51,24 +51,24 @@ export class AuthenticateUseCase {
       const [accessToken, refreshToken] = await Promise.all([
         this.tokens.buildAccessToken(
           {
-            customerId: profile.Content.customerId,
-            email: profile.Content.email,
-            name: profile.Content.name,
+            customerId: profile.id,
+            email: profile.email,
+            name: profile.name,
           },
           {
             issuer: 'meus_cupons.authenticator',
-            subject: profile.PK,
+            subject: profile.id,
           },
         ),
         this.tokens.buildRefreshToken(
           {
-            customerId: profile.Content.customerId,
-            email: profile.Content.email,
-            name: profile.Content.name,
+            customerId: profile.id,
+            email: profile.email,
+            name: profile.name,
           },
           {
             issuer: 'meus_cupons.authenticator',
-            subject: profile.PK,
+            subject: profile.id,
           },
         ),
       ]);

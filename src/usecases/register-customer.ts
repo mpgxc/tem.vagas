@@ -1,14 +1,13 @@
+import { ExcludeKeys, Result } from '@/common/helpers';
+import { Customer } from '@/domain/customer';
+import { CustomersRepository } from '@/infra/database/repositories/customers-repository';
+import { HasherProvider } from '@/infra/providers/hasher';
 import { LoggerInject, LoggerService } from '@app/logx';
 import {
   ConflictException,
   HttpException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { Result } from 'common/helpers';
-import { createCustomerProfile } from 'domain/customer/profile';
-import { CustomersRepository } from 'infra/database/repositories/customers-repository';
-import { HasherProvider } from 'infra/providers/hasher';
-import { v7 as uuid } from 'uuid';
 
 export class RegisterCustomerProfileUseCase {
   constructor(
@@ -22,11 +21,9 @@ export class RegisterCustomerProfileUseCase {
     payload: RegisterCustomerInput,
   ): Promise<RegisterCustomerOutput> {
     try {
-      const { name, phone, email, password } = payload;
+      const exists = await this.repository.findByEmail(payload.email);
 
-      const profileExists = await this.repository.findByEmail(email);
-
-      if (profileExists) {
+      if (exists) {
         return Result.Err(
           new ConflictException({
             name: 'CustomerAlreadyExists',
@@ -35,18 +32,20 @@ export class RegisterCustomerProfileUseCase {
         );
       }
 
-      const customerId = uuid();
+      const customer = Customer.safeParse(payload);
 
-      const profile = createCustomerProfile({
-        name,
-        email,
-        password: await this.hasher.hash(password),
-        avatar: 'https://avatars.githubusercontent.com/u/14010295?v=4',
-        phone,
-        customerId,
-      });
+      if (!customer.success) {
+        return Result.Err(
+          new ConflictException({
+            name: 'InvalidCustomerPayload',
+            message: `Invalid customer payload: ${customer.error.message}`,
+          }),
+        );
+      }
 
-      await this.repository.create(profile);
+      customer.data.password = await this.hasher.hash(customer.data.password);
+
+      await this.repository.create(customer.data);
 
       return Result.Ok();
     } catch (error) {
@@ -66,11 +65,13 @@ export class RegisterCustomerProfileUseCase {
   }
 }
 
-export type RegisterCustomerInput = {
-  name: string;
-  phone: string;
-  email: string;
-  password: string;
-};
+export type RegisterCustomerInput = ExcludeKeys<
+  Customer,
+  'id' | 'avatar' | 'created_at' | 'updated_at'
+>;
 
 export type RegisterCustomerOutput = Result<void, HttpException>;
+
+/**
+ * @todo: Remover erros http do usecase e tratar no controller, na camada dos casos deverá ser tratado apenas erros de negócio (Erros como Objetos)
+ */
