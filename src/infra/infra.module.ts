@@ -11,15 +11,18 @@ import { AccessTokenStrategy } from './auth/access-token.strategy';
 import { RefreshTokenStrategy } from './auth/refresh-token.strategy';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { CustomerProfileController } from './controllers/customer-profile.controller';
+import { MailerController } from './controllers/mailer.controller';
 import { RegisterCustomerProfileController } from './controllers/register-customer.controller';
 import { PrismaService } from './database/prisma.service';
 import { CustomersRepository } from './database/repositories/customers-repository';
 import { configuration } from './environment';
 import { HasherProvider } from './providers/hasher';
+import { MailerModule } from './providers/mailer.module';
 import { TokensProvider } from './providers/tokens.provider';
 
 @Module({
   imports: [
+    MailerModule,
     PassportModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -36,8 +39,9 @@ import { TokensProvider } from './providers/tokens.provider';
     }),
   ],
   controllers: [
-    CustomerProfileController,
+    MailerController,
     AuthenticateController,
+    CustomerProfileController,
     RegisterCustomerProfileController,
   ],
   providers: [

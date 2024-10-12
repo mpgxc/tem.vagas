@@ -17,8 +17,16 @@ type WelcomeEmailProps = {
   username?: string;
 };
 
-export const welcomeEmailRender = (args: WelcomeEmailProps) =>
-  render(<WelcomeEmail {...args} />);
+export const welcomeEmailRender = async (args: WelcomeEmailProps) => {
+  const html = await render(<WelcomeEmail {...args} />);
+
+  const text = await render(<WelcomeEmail {...args} />, {
+    plainText: true,
+    pretty: true,
+  });
+
+  return { html, text };
+};
 
 export const WelcomeEmail = ({ username }: WelcomeEmailProps) => {
   return (
