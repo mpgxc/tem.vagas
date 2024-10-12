@@ -1,4 +1,5 @@
-import React from 'react';
+import { render } from '@react-email/components';
+import * as React from 'react';
 
 import {
   Body,
@@ -15,6 +16,9 @@ import {
 type WelcomeEmailProps = {
   username?: string;
 };
+
+export const welcomeEmailRender = (args: WelcomeEmailProps) =>
+  render(<WelcomeEmail {...args} />);
 
 export const WelcomeEmail = ({ username }: WelcomeEmailProps) => {
   return (
@@ -52,7 +56,7 @@ export const WelcomeEmail = ({ username }: WelcomeEmailProps) => {
           <Row>
             <Text style={{ textAlign: 'center', color: '#706a7b' }}>
               © 2022 Tem Vagas, Todos os Direitos Reservados <br />
-              350 Bush Street, 2º Andar, San Francisco, CA, 94104 - EUA
+              246, Av. Duque de Caxias, Centro, Oeiras - PI, 64500-000
             </Text>
           </Row>
         </Section>
@@ -60,10 +64,6 @@ export const WelcomeEmail = ({ username }: WelcomeEmailProps) => {
     </Html>
   );
 };
-
-WelcomeEmail.PreviewProps = {
-  username: 'mpgxc',
-} as WelcomeEmailProps;
 
 export default WelcomeEmail;
 

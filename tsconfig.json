@@ -26,7 +26,8 @@
     "paths": {
       "@app/logx": ["../libs/logx/src"],
       "@app/logx/*": ["../libs/logx/src/*"],
-      "@/*": ["*"]
+      "@/*": ["*"],
+      "@emails/*": ["../emails/*"]
     }
   }
 }
