@@ -17,6 +17,10 @@ export class RegisterCustomerProfileUseCase {
     private readonly repository: CustomersRepository,
   ) {}
 
+  private getAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${name}&background=random`;
+  }
+
   async handle(
     payload: RegisterCustomerInput,
   ): Promise<RegisterCustomerOutput> {
@@ -43,6 +47,7 @@ export class RegisterCustomerProfileUseCase {
         );
       }
 
+      customer.data.avatar = this.getAvatar(customer.data.full_name);
       customer.data.password = await this.hasher.hash(customer.data.password);
 
       await this.repository.create(customer.data);

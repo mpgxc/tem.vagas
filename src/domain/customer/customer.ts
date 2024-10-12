@@ -21,10 +21,7 @@ export const Customer = z.object({
   }),
   document_type: z.enum(['CPF', 'CNPJ']),
   email: z.string().email(),
-  avatar: z
-    .string()
-    .url()
-    .default(() => 'https://avatars.githubusercontent.com/u/14010295?v=4'),
+  avatar: z.string().url().nullable(),
   full_name: z.string(),
   name: z.string(),
   password: z.string(),
