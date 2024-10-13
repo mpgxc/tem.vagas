@@ -19,14 +19,10 @@ model Customer {
   document_type DocumentType
   phone_number  String       @unique
   bio           String?
-  company_info  Json?
-  preferences   Json?
   created_at    DateTime     @default(now())
   updated_at    DateTime     @updatedAt
 
-  Advertisement        Advertisement[] @relation("CustomerAdvertisements")
-  NotificationSent     Notification[]  @relation("Sender")
-  NotificationReceived Notification[]  @relation("Receiver")
+  advertisement Advertisement[]
 
   @@map("customers")
 }
@@ -35,23 +31,23 @@ model Advertisement {
   id           String             @id @default(uuid())
   title        String
   description  String
-  location     String // Exemplo: Rua, Bairro, Cidade, Estado
-  price        Decimal
+  location     String
+  price        Decimal            @db.Decimal(10, 2)
   bedrooms     Int
   bathrooms    Int
   garage       Int
   area         Float
-  slug         String
-  is_furnished Boolean // Mobiliado?
+  slug         String             @unique
+  is_furnished Boolean
   image_urls   String[]
   status       AnnouncementStatus
   created_at   DateTime           @default(now())
   updated_at   DateTime           @updatedAt
 
-  customer_id  String
-  Customer     Customer       @relation("CustomerAdvertisements", fields: [customer_id], references: [id])
-  Notification Notification[]
-  Address      Address?
+  customer_id String
+  customer    Customer @relation(fields: [customer_id], references: [id])
+
+  address Address?
 
   @@map("advertisements")
 }
@@ -68,8 +64,8 @@ model Address {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  announcement_id String        @unique
-  Advertisement   Advertisement @relation(fields: [announcement_id], references: [id])
+  advertisement   Advertisement @relation(fields: [advertisementId], references: [id])
+  advertisementId String        @unique
 
   @@map("addresses")
 }
@@ -82,10 +78,6 @@ model Notification {
   sender_id   String
   receiver_id String
   property_id String?
-
-  Sender        Customer       @relation("Sender", fields: [sender_id], references: [id])
-  Receiver      Customer       @relation("Receiver", fields: [receiver_id], references: [id])
-  Advertisement Advertisement? @relation(fields: [property_id], references: [id])
 
   @@map("notifications")
 }
