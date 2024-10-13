@@ -11,26 +11,16 @@ const formatCNPJ = (document: string) =>
 
 const cpfSchema = z
   .string()
-  .refine(
-    (value) => {
-      return cpfRegex.test(value);
-    },
-    {
-      message: 'CPF inválido',
-    },
-  )
+  .refine((value) => cpfRegex.test(value), {
+    message: 'CPF inválido',
+  })
   .transform(formatCPF);
 
 const cnpjSchema = z
   .string()
-  .refine(
-    (value) => {
-      return cnpjRegex.test(value);
-    },
-    {
-      message: 'CNPJ inválido',
-    },
-  )
+  .refine((value) => cnpjRegex.test(value), {
+    message: 'CNPJ inválido',
+  })
   .transform(formatCNPJ);
 
 export const Document = z.union([cpfSchema, cnpjSchema]);

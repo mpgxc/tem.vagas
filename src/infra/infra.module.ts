@@ -1,3 +1,4 @@
+import { RegisterAdvertisementUseCase } from '@/usecases/register-advertisement';
 import { LogxModule } from '@app/logx';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -12,8 +13,10 @@ import { RefreshTokenStrategy } from './auth/refresh-token.strategy';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { CustomerProfileController } from './controllers/customer-profile.controller';
 import { MailerController } from './controllers/mailer.controller';
+import { RegisterAdvertisementController } from './controllers/register-advertisement.controller';
 import { RegisterCustomerProfileController } from './controllers/register-customer.controller';
 import { PrismaService } from './database/prisma.service';
+import { AdvertisementRepository } from './database/repositories/advertisement-repository';
 import { CustomersRepository } from './database/repositories/customers-repository';
 import { configuration } from './environment';
 import { HasherProvider } from './providers/hasher';
@@ -42,6 +45,7 @@ import { TokensProvider } from './providers/tokens.provider';
     MailerController,
     AuthenticateController,
     CustomerProfileController,
+    RegisterAdvertisementController,
     RegisterCustomerProfileController,
   ],
   providers: [
@@ -60,10 +64,12 @@ import { TokensProvider } from './providers/tokens.provider';
      * UseCases
      */
     AuthenticateUseCase,
+    RegisterAdvertisementUseCase,
     RegisterCustomerProfileUseCase,
     /**
      * Repositories
      */
+    AdvertisementRepository,
     CustomersRepository,
     PrismaService,
   ],

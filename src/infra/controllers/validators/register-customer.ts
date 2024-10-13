@@ -12,12 +12,12 @@ import {
 } from 'class-validator';
 import { IsDocumentType } from './decorators';
 
-const CustomerRoles = [
-  'Corretor',
-  'Imobiliaria',
-  'Inquilino',
-  'Proprietario',
-] as CustomerRoles[];
+enum CustomerRole {
+  Corretor = 'Corretor',
+  Imobiliaria = 'Imobiliaria',
+  Inquilino = 'Inquilino',
+  Proprietario = 'Proprietario',
+}
 
 export class RegisterCustomerPayload {
   @ApiProperty({
@@ -94,11 +94,9 @@ export class RegisterCustomerPayload {
   phone_number!: string;
 
   @ApiProperty({
-    enum: CustomerRoles,
+    enum: CustomerRole,
     required: true,
   })
-  @IsEnum({
-    enum: CustomerRoles,
-  })
+  @IsEnum(CustomerRole, { each: true })
   role!: CustomerRoles;
 }
