@@ -14,7 +14,7 @@ export function IsDocumentType(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any) {
+        validate(value: string) {
           return Document.safeParse(value).success;
         },
         defaultMessage: buildMessage(
