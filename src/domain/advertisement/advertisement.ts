@@ -17,6 +17,14 @@ export const Address = z.object({
   updated_at: z.date().default(() => new Date()),
 });
 
+export const author = z.object({
+  name: z.string(),
+  full_name: z.string(),
+  email: z.string().email(),
+  phone_number: z.string(),
+  avatar: z.string().url(),
+});
+
 export const Advertisement = z.object({
   id: z
     .string()

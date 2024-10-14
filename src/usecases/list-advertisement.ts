@@ -37,6 +37,7 @@ export type ListAdvertisementInput = {
   page: number;
   limit: number;
   orderBy: 'asc' | 'desc';
+  customerId?: string;
 };
 
 export type ListAdvertisementOutput = Result<Advertisement[], HttpException>;

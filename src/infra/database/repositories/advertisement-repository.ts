@@ -47,6 +47,9 @@ export class AdvertisementRepository {
       orderBy: {
         created_at: options.orderBy,
       },
+      where: {
+        customer_id: options.customerId,
+      },
     });
 
     return items.map((item) =>
@@ -62,4 +65,5 @@ export type AdvertisementListOptions = {
   page: number;
   limit: number;
   orderBy: 'asc' | 'desc';
+  customerId?: string;
 };
