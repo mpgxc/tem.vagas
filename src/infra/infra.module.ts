@@ -1,3 +1,4 @@
+import { ListAdvertisementUseCase } from '@/usecases/list-advertisement';
 import { RegisterAdvertisementUseCase } from '@/usecases/register-advertisement';
 import { LogxModule } from '@app/logx';
 import { Module } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { AccessTokenStrategy } from './auth/access-token.strategy';
 import { RefreshTokenStrategy } from './auth/refresh-token.strategy';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { CustomerProfileController } from './controllers/customer-profile.controller';
+import { ListAdvertisementController } from './controllers/list-advertisement.controller';
 import { MailerController } from './controllers/mailer.controller';
 import { RegisterAdvertisementController } from './controllers/register-advertisement.controller';
 import { RegisterCustomerProfileController } from './controllers/register-customer.controller';
@@ -45,6 +47,7 @@ import { TokensProvider } from './providers/tokens.provider';
     MailerController,
     AuthenticateController,
     CustomerProfileController,
+    ListAdvertisementController,
     RegisterAdvertisementController,
     RegisterCustomerProfileController,
   ],
@@ -64,6 +67,7 @@ import { TokensProvider } from './providers/tokens.provider';
      * UseCases
      */
     AuthenticateUseCase,
+    ListAdvertisementUseCase,
     RegisterAdvertisementUseCase,
     RegisterCustomerProfileUseCase,
     /**

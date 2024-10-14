@@ -18,7 +18,7 @@ export class AdvertisementRepository {
     });
   }
 
-  async findBySlug(slug: string): OptionalPromise<any> {
+  async findBySlug(slug: string): OptionalPromise<Advertisement> {
     const item = await this.client.advertisement.findUnique({
       where: {
         slug,
@@ -36,4 +36,30 @@ export class AdvertisementRepository {
       })
     );
   }
+
+  async list(options: AdvertisementListOptions): Promise<Advertisement[]> {
+    const items = await this.client.advertisement.findMany({
+      take: options.limit,
+      skip: (options.page - 1) * options.limit,
+      include: {
+        address: true,
+      },
+      orderBy: {
+        created_at: options.orderBy,
+      },
+    });
+
+    return items.map((item) =>
+      Advertisement.parse({
+        ...item,
+        price: item.price.toNumber(),
+      }),
+    );
+  }
 }
+
+export type AdvertisementListOptions = {
+  page: number;
+  limit: number;
+  orderBy: 'asc' | 'desc';
+};
