@@ -1,3 +1,5 @@
+import { ListAdvertisementUseCase } from '@/usecases/list-advertisement';
+import { RegisterAdvertisementUseCase } from '@/usecases/register-advertisement';
 import { LogxModule } from '@app/logx';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -8,17 +10,24 @@ import { AuthenticateUseCase } from 'usecases/authenticate';
 import { RegisterCustomerProfileUseCase } from 'usecases/register-customer';
 import { AccessTokenAuthGuard } from './auth/access-token-auth.guard';
 import { AccessTokenStrategy } from './auth/access-token.strategy';
+import { RefreshTokenStrategy } from './auth/refresh-token.strategy';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { CustomerProfileController } from './controllers/customer-profile.controller';
+import { ListAdvertisementController } from './controllers/list-advertisement.controller';
+import { MailerController } from './controllers/mailer.controller';
+import { RegisterAdvertisementController } from './controllers/register-advertisement.controller';
 import { RegisterCustomerProfileController } from './controllers/register-customer.controller';
 import { PrismaService } from './database/prisma.service';
+import { AdvertisementRepository } from './database/repositories/advertisement-repository';
 import { CustomersRepository } from './database/repositories/customers-repository';
 import { configuration } from './environment';
 import { HasherProvider } from './providers/hasher';
+import { MailerModule } from './providers/mailer.module';
 import { TokensProvider } from './providers/tokens.provider';
 
 @Module({
   imports: [
+    MailerModule,
     PassportModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -35,13 +44,16 @@ import { TokensProvider } from './providers/tokens.provider';
     }),
   ],
   controllers: [
-    CustomerProfileController,
+    MailerController,
     AuthenticateController,
+    CustomerProfileController,
+    ListAdvertisementController,
+    RegisterAdvertisementController,
     RegisterCustomerProfileController,
   ],
   providers: [
     AccessTokenStrategy,
-    // RefreshTokenStrategy,
+    RefreshTokenStrategy,
     /**
      * Providers
      */
@@ -55,10 +67,13 @@ import { TokensProvider } from './providers/tokens.provider';
      * UseCases
      */
     AuthenticateUseCase,
+    ListAdvertisementUseCase,
+    RegisterAdvertisementUseCase,
     RegisterCustomerProfileUseCase,
     /**
      * Repositories
      */
+    AdvertisementRepository,
     CustomersRepository,
     PrismaService,
   ],

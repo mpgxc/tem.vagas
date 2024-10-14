@@ -1,5 +1,6 @@
 {
   "github-actions.workflows.pinned.workflows": [
     ".github/workflows/vercel-deploy.yml"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

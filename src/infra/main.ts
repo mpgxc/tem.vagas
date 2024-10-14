@@ -46,6 +46,7 @@ import { InfraModule } from './infra.module';
       )
       .setVersion('1.0')
       .addTag('pragmatic.clean.api')
+      .addBearerAuth()
       .build(),
   );
 

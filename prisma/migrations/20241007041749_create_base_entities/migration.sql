@@ -20,8 +20,6 @@ CREATE TABLE "customers" (
     "document_type" "DocumentType" NOT NULL,
     "phone_number" TEXT NOT NULL,
     "bio" TEXT,
-    "company_info" JSONB,
-    "preferences" JSONB,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -34,7 +32,7 @@ CREATE TABLE "advertisements" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "location" TEXT NOT NULL,
-    "price" DECIMAL(65,30) NOT NULL,
+    "price" DECIMAL(10,2) NOT NULL,
     "bedrooms" INTEGER NOT NULL,
     "bathrooms" INTEGER NOT NULL,
     "garage" INTEGER NOT NULL,
@@ -62,7 +60,7 @@ CREATE TABLE "addresses" (
     "longitude" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "announcement_id" TEXT NOT NULL,
+    "advertisementId" TEXT NOT NULL,
 
     CONSTRAINT "addresses_pkey" PRIMARY KEY ("id")
 );
@@ -102,7 +100,10 @@ CREATE UNIQUE INDEX "customers_document_key" ON "customers"("document");
 CREATE UNIQUE INDEX "customers_phone_number_key" ON "customers"("phone_number");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "addresses_announcement_id_key" ON "addresses"("announcement_id");
+CREATE UNIQUE INDEX "advertisements_slug_key" ON "advertisements"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "addresses_advertisementId_key" ON "addresses"("advertisementId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "leads_email_key" ON "leads"("email");
@@ -114,13 +115,4 @@ CREATE UNIQUE INDEX "leads_phone_key" ON "leads"("phone");
 ALTER TABLE "advertisements" ADD CONSTRAINT "advertisements_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "addresses" ADD CONSTRAINT "addresses_announcement_id_fkey" FOREIGN KEY ("announcement_id") REFERENCES "advertisements"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "notifications" ADD CONSTRAINT "notifications_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "customers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "notifications" ADD CONSTRAINT "notifications_receiver_id_fkey" FOREIGN KEY ("receiver_id") REFERENCES "customers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "notifications" ADD CONSTRAINT "notifications_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "advertisements"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "addresses" ADD CONSTRAINT "addresses_advertisementId_fkey" FOREIGN KEY ("advertisementId") REFERENCES "advertisements"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -11,7 +11,7 @@ export class LogxModule {
 
   static forRoot(options?: LoggerModuleOptions): DynamicModule {
     const prefixedLoggerProviders: Provider<LoggerService>[] =
-      createLoggerProviders(this.tokensForLoggers);
+      createLoggerProviders(LogxModule.tokensForLoggers);
 
     return {
       module: LogxModule,

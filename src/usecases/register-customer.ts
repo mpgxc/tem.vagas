@@ -5,6 +5,7 @@ import { HasherProvider } from '@/infra/providers/hasher';
 import { LoggerInject, LoggerService } from '@app/logx';
 import {
   ConflictException,
+  ForbiddenException,
   HttpException,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -17,17 +18,34 @@ export class RegisterCustomerProfileUseCase {
     private readonly repository: CustomersRepository,
   ) {}
 
+  private getAvatar(name: string): string {
+    return `https://ui-avatars.com/api/?name=${name}&background=random`;
+  }
+
   async handle(
     payload: RegisterCustomerInput,
   ): Promise<RegisterCustomerOutput> {
     try {
-      const exists = await this.repository.findByEmail(payload.email);
+      if (payload.role === 'Administrador') {
+        return Result.Err(
+          new ForbiddenException({
+            name: 'InvalidCustomerRole',
+            message: `Invalid customer role: ${payload.role} - Administrador is not allowe to be created using this endpoint`,
+          }),
+        );
+      }
+
+      const exists = await this.repository.findUnique({
+        email: payload.email,
+        document: payload.document,
+        phone_number: payload.phone_number,
+      });
 
       if (exists) {
         return Result.Err(
           new ConflictException({
             name: 'CustomerAlreadyExists',
-            message: 'A customer with this email already exists',
+            message: `A customer with this <${exists.keys}> already exists`,
           }),
         );
       }
@@ -43,6 +61,7 @@ export class RegisterCustomerProfileUseCase {
         );
       }
 
+      customer.data.avatar = this.getAvatar(customer.data.full_name);
       customer.data.password = await this.hasher.hash(customer.data.password);
 
       await this.repository.create(customer.data);

@@ -6,10 +6,11 @@ import {
   HttpStatus,
   LoggerService,
 } from '@nestjs/common';
-import { ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentCustomer as CurrentCustomerPayload } from 'infra/auth/access-token.strategy';
 import { CurrentCustomer } from 'infra/auth/current-customer.decorator';
 
+@ApiBearerAuth()
 @ApiTags('Customers')
 @Controller('customers')
 export class CustomerProfileController {
@@ -19,7 +20,6 @@ export class CustomerProfileController {
   ) {}
 
   @Get('profile')
-  @ApiHeader({ name: 'Authorization', required: true })
   @ApiOkResponse({
     description: 'The profile of the current customer.',
   })

@@ -4,6 +4,9 @@ import { z } from 'zod';
 
 const schema = {
   APP: z.object({
+    NODE_ENV: z
+      .enum(['development', 'production', 'test'])
+      .default('development'),
     APP_PORT: z.string().default('3003'),
     APP_HOST: z.string().default('0.0.0.0'),
     APP_COOKIE_SECRET: z.string(),

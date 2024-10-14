@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -25,7 +26,8 @@
     "paths": {
       "@app/logx": ["../libs/logx/src"],
       "@app/logx/*": ["../libs/logx/src/*"],
-      "@/*": ["*"]
+      "@/*": ["*"],
+      "@emails/*": ["../emails/*"]
     }
   }
 }
