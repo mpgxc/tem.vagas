@@ -29,8 +29,8 @@ export class ListAdvertisementController {
     @Query('orderBy') orderBy?: 'asc' | 'desc',
   ): Promise<Advertisement[]> {
     const output = await this.usecase.handle({
-      page: page ?? 1,
-      limit: limit ?? 10,
+      page: page || 1,
+      limit: limit || 10,
       orderBy: orderBy ?? 'asc',
     });
 
