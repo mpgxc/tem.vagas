@@ -28,26 +28,29 @@ model Customer {
 }
 
 model Advertisement {
-  id           String             @id @default(uuid())
+  id           String                @id @default(uuid())
   title        String
   description  String
   location     String
-  price        Decimal            @db.Decimal(10, 2)
+  price        Decimal               @db.Decimal(10, 2)
   bedrooms     Int
   bathrooms    Int
   garage       Int
   area         Float
-  slug         String             @unique
+  slug         String                @unique
   is_furnished Boolean
   image_urls   String[]
+  category     AdvertisementCategory
+  mode         AdvertisementMode
   status       AnnouncementStatus
-  created_at   DateTime           @default(now())
-  updated_at   DateTime           @updatedAt
+  created_at   DateTime              @default(now())
+  updated_at   DateTime              @updatedAt
 
-  customer_id String
   customer    Customer @relation(fields: [customer_id], references: [id])
+  customer_id String
 
-  address Address?
+  address    Address @relation(fields: [address_id], references: [id])
+  address_id String  @unique
 
   @@map("advertisements")
 }
@@ -64,8 +67,7 @@ model Address {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  advertisement   Advertisement @relation(fields: [advertisementId], references: [id])
-  advertisementId String        @unique
+  advertisement Advertisement?
 
   @@map("addresses")
 }
@@ -114,4 +116,18 @@ enum AnnouncementStatus {
 enum DocumentType {
   CPF
   CNPJ
+}
+
+enum AdvertisementCategory {
+  Casa
+  Apartamento
+  Kitnet
+  Outros
+}
+
+enum AdvertisementMode {
+  Venda
+  Aluguel
+  Temporada
+  Dividir
 }

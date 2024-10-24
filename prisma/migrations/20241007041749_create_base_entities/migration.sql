@@ -7,6 +7,12 @@ CREATE TYPE "AnnouncementStatus" AS ENUM ('Disponivel', 'Alugado', 'Pausado', 'V
 -- CreateEnum
 CREATE TYPE "DocumentType" AS ENUM ('CPF', 'CNPJ');
 
+-- CreateEnum
+CREATE TYPE "AdvertisementCategory" AS ENUM ('Casa', 'Apartamento', 'Kitnet', 'Outros');
+
+-- CreateEnum
+CREATE TYPE "AdvertisementMode" AS ENUM ('Venda', 'Aluguel', 'Temporada', 'Dividir');
+
 -- CreateTable
 CREATE TABLE "customers" (
     "id" TEXT NOT NULL,
@@ -40,10 +46,13 @@ CREATE TABLE "advertisements" (
     "slug" TEXT NOT NULL,
     "is_furnished" BOOLEAN NOT NULL,
     "image_urls" TEXT[],
+    "category" "AdvertisementCategory" NOT NULL,
+    "mode" "AdvertisementMode" NOT NULL,
     "status" "AnnouncementStatus" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "customer_id" TEXT NOT NULL,
+    "address_id" TEXT NOT NULL,
 
     CONSTRAINT "advertisements_pkey" PRIMARY KEY ("id")
 );
@@ -60,7 +69,6 @@ CREATE TABLE "addresses" (
     "longitude" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "advertisementId" TEXT NOT NULL,
 
     CONSTRAINT "addresses_pkey" PRIMARY KEY ("id")
 );
@@ -103,7 +111,7 @@ CREATE UNIQUE INDEX "customers_phone_number_key" ON "customers"("phone_number");
 CREATE UNIQUE INDEX "advertisements_slug_key" ON "advertisements"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "addresses_advertisementId_key" ON "addresses"("advertisementId");
+CREATE UNIQUE INDEX "advertisements_address_id_key" ON "advertisements"("address_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "leads_email_key" ON "leads"("email");
@@ -115,4 +123,4 @@ CREATE UNIQUE INDEX "leads_phone_key" ON "leads"("phone");
 ALTER TABLE "advertisements" ADD CONSTRAINT "advertisements_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "addresses" ADD CONSTRAINT "addresses_advertisementId_fkey" FOREIGN KEY ("advertisementId") REFERENCES "advertisements"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "advertisements" ADD CONSTRAINT "advertisements_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "addresses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
