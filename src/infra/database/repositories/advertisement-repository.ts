@@ -7,12 +7,19 @@ import { PrismaService } from '../prisma.service';
 export class AdvertisementRepository {
   constructor(private readonly client: PrismaService) {}
 
-  async create(data: Advertisement): Promise<void> {
+  async create(content: Advertisement): Promise<void> {
+    const { customer_id, address, ...data } = content;
+
     await this.client.advertisement.create({
       data: {
         ...data,
+        customer: {
+          connect: {
+            id: customer_id,
+          },
+        },
         address: {
-          create: data.address,
+          create: address,
         },
       },
     });
